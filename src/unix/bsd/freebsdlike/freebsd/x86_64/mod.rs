@@ -301,7 +301,6 @@ cfg_if! {
         }
     }
 }
-
 // should be pub(crate), but that requires Rust 1.18.0
 cfg_if! {
     if #[cfg(libc_const_size_of)] {
@@ -325,6 +324,14 @@ pub const _MC_FPFMT_XMM: c_long = 0x10002;
 pub const _MC_FPOWNED_NONE: c_long = 0x20000;
 pub const _MC_FPOWNED_FPU: c_long = 0x20001;
 pub const _MC_FPOWNED_PCB: c_long = 0x20002;
+
+extern "C" {
+    pub fn getcontext(context: *mut ucontext_t) -> ::c_int;
+    pub fn getcontextx() -> *mut ucontext_t;
+    pub fn setcontext(context: *const ucontext_t) -> ::c_int;
+    pub fn makecontext(context: *mut ucontext_t, hdl: unsafe extern "C" fn(), argc: ::c_int, ...);
+    pub fn swapcontext(dst: *mut ucontext_t, src: *const ucontext_t) -> ::c_int;
+}
 
 cfg_if! {
     if #[cfg(libc_align)] {
